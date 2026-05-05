@@ -1,0 +1,10 @@
+{"timestamp":"2026-05-05T12:00:01Z","level":"INFO","message":"user login","user_id":"u123","service":"auth"}
+{"timestamp":"2026-05-05T12:00:02Z","level":"ERROR","message":"database timeout","service":"db","retry":true}
+{"timestamp":"2026-05-05T12:00:03Z","level":"INFO","message":"request completed","path":"/api/orders","status":200}
+{"timestamp":"2026-05-05T12:00:04Z","level":"WARN","message":"cache miss","key":"user:u123"}
+{"timestamp":"2026-05-05T12:00:05Z","level":"ERROR","message":"disk full","service":"storage"}
+{"timestamp":"2026-05-05T12:00:06Z","level":"INFO","message":"user logout","user_id":"u123"}
+{"timestamp":"2026-05-05T12:00:07Z","level":"ERROR","message":"invalid token","service":"auth"}
+{"timestamp":"2026-05-05T12:00:08Z","level":"INFO","message":"request completed","path":"/api/users","status":200}
+{"timestamp":"2026-05-05T12:00:09Z","level":"WARN","message":"slow query","duration_ms":812}
+{"timestamp":"2026-05-05T12:00:10Z","level":"ERROR","message":"connection refused","service":"network"}

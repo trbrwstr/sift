@@ -1,0 +1,8 @@
+[package]
+name = "sift-output"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+logforge-core = { path = "../core" }
+serde_json = "1"

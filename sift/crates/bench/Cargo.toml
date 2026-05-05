@@ -1,0 +1,13 @@
+[package]
+name = "sift-bench"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+criterion = "0.5"
+logforge-core = { path = "../core" }
+logforge-formats = { path = "../formats" }
+
+[[bench]]
+name = "pipeline"
+harness = false
