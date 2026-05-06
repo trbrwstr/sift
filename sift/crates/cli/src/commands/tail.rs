@@ -5,7 +5,7 @@ use std::{
     time::Duration,
 };
 
-pub fn tail_file(path: &str) -> std::io::Result<()> {
+pub fn run(path: &str) -> std::io::Result<()> {
     let mut file = File::open(path)?;
     let mut pos = file.seek(SeekFrom::End(0))?;
 
@@ -14,7 +14,6 @@ pub fn tail_file(path: &str) -> std::io::Result<()> {
         reader.seek(SeekFrom::Start(pos))?;
 
         let mut line = String::new();
-
         while reader.read_line(&mut line)? > 0 {
             print!("{}", line);
             line.clear();

@@ -9,6 +9,6 @@ pub struct StatsArgs {
 
 pub fn run(args: StatsArgs) -> Result<(), Box<dyn std::error::Error>> {
     let agg = run_pipeline(&args.file, make_parser(&args.format), None)?;
-    stdout::print_summary(&agg);
+    stdout::print_summary(&agg, 5);
     Ok(())
 }

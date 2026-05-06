@@ -1,6 +1,6 @@
 use sift_core::aggregate::Aggregator;
 
-pub fn print_summary(agg: &Aggregator) {
+pub fn print_summary(agg: &Aggregator, top: usize) {
     println!("\n=== Log Summary ===");
     println!("Total entries: {}", agg.total);
 
@@ -15,7 +15,7 @@ pub fn print_summary(agg: &Aggregator) {
 
     if !agg.messages.is_empty() {
         println!("\nTop Messages:");
-        for (msg, count) in agg.top_messages(5) {
+        for (msg, count) in agg.top_messages(top) {
             println!("  {:<50} {}", truncate(msg, 50), count);
         }
     }
