@@ -36,5 +36,5 @@ Sift is a local CLI tool that focuses on one thing:
 
 ```bash
 git clone https://github.com/yourname/logforge
-cd logforge
+cd sift
 cargo build --release
