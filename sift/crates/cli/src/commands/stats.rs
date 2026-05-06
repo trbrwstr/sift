@@ -1,10 +1,10 @@
 use sift_core::engine::run_pipeline;
-use sift_formats::make_parser;
+use sift_formats::{make_parser, LogFormat};
 use sift_output::stdout;
 
 pub struct StatsArgs {
     pub file: String,
-    pub format: String,
+    pub format: LogFormat,
 }
 
 pub fn run(args: StatsArgs) -> Result<(), Box<dyn std::error::Error>> {

@@ -2,6 +2,7 @@ mod commands;
 
 use clap::{Parser, Subcommand, ValueEnum};
 use commands::{analyze, stats, tail};
+use sift_formats::LogFormat;
 
 #[derive(Clone, Default, ValueEnum)]
 pub enum OutputFormat {
@@ -24,9 +25,9 @@ enum Commands {
     Analyze {
         file: String,
 
-        #[arg(short, long, default_value = "plain",
+        #[arg(short, long, value_enum, default_value_t = LogFormat::Plain,
               help = "Log format: plain, json, nginx")]
-        format: String,
+        format: LogFormat,
 
         #[arg(long, help = "Filter expression, e.g. 'status>=500 AND level=ERROR'")]
         filter: Option<String>,
@@ -43,8 +44,8 @@ enum Commands {
     Stats {
         file: String,
 
-        #[arg(short, long, default_value = "plain")]
-        format: String,
+        #[arg(short, long, value_enum, default_value_t = LogFormat::Plain)]
+        format: LogFormat,
     },
     /// Stream new lines appended to a file (like tail -f)
     Tail {

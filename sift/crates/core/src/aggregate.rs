@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+const MAX_UNIQUE_MESSAGES: usize = 100_000;
+
 #[derive(Default, Clone)]
 pub struct Aggregator {
     pub total: usize,
@@ -21,7 +23,7 @@ impl Aggregator {
 
         if let Some(c) = self.messages.get_mut(entry.message.as_str()) {
             *c += 1;
-        } else {
+        } else if self.messages.len() < MAX_UNIQUE_MESSAGES {
             self.messages.insert(entry.message.clone(), 1);
         }
     }

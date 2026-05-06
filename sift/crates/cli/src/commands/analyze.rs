@@ -1,11 +1,11 @@
 use sift_core::engine::run_pipeline;
-use sift_formats::make_parser;
+use sift_formats::{make_parser, LogFormat};
 use sift_output::{json, stdout, table};
 use crate::OutputFormat;
 
 pub struct AnalyzeArgs {
     pub file: String,
-    pub format: String,
+    pub format: LogFormat,
     pub filter: Option<String>,
     pub output: OutputFormat,
     pub top: usize,

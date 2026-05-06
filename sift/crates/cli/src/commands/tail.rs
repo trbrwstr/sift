@@ -6,7 +6,8 @@ use std::{
 };
 
 pub fn run(path: &str) -> std::io::Result<()> {
-    let mut file = File::open(path)?;
+    let canonical = std::fs::canonicalize(path)?;
+    let mut file = File::open(canonical)?;
     let mut pos = file.seek(SeekFrom::End(0))?;
 
     loop {

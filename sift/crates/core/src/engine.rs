@@ -20,7 +20,8 @@ pub fn run_pipeline<P: LogParser + 'static>(
     parser: P,
     query: Option<String>,
 ) -> Result<Aggregator, std::io::Error> {
-    let file = File::open(file_path)?;
+    let path = std::fs::canonicalize(file_path)?;
+    let file = File::open(path)?;
     let reader = BufReader::new(file);
 
     let parallelism = std::thread::available_parallelism()

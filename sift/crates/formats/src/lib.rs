@@ -5,6 +5,14 @@ pub mod plain;
 
 use sift_core::{engine::LogParser, types::LogEntry};
 
+#[derive(Clone, Default, clap::ValueEnum)]
+pub enum LogFormat {
+    #[default]
+    Plain,
+    Json,
+    Nginx,
+}
+
 /// Enum-based parser: static dispatch, no heap allocation or vtable per line.
 pub enum AnyParser {
     Json(json::JsonParser),
@@ -22,10 +30,10 @@ impl LogParser for AnyParser {
     }
 }
 
-pub fn make_parser(format: &str) -> AnyParser {
+pub fn make_parser(format: &LogFormat) -> AnyParser {
     match format {
-        "json"  => AnyParser::Json(json::JsonParser),
-        "nginx" => AnyParser::Nginx(nginx::NginxParser::new()),
-        _       => AnyParser::Plain(plain::PlainParser),
+        LogFormat::Json  => AnyParser::Json(json::JsonParser),
+        LogFormat::Nginx => AnyParser::Nginx(nginx::NginxParser::new()),
+        LogFormat::Plain => AnyParser::Plain(plain::PlainParser),
     }
 }
