@@ -5,9 +5,17 @@ edition = "2021"
 
 [dependencies]
 criterion = "0.5"
-logforge-core = { path = "../core" }
-logforge-formats = { path = "../formats" }
+sift-core = { path = "../core" }
+sift-formats = { path = "../formats" }
 
 [[bench]]
 name = "pipeline"
+harness = false
+
+[[bench]]
+name = "parse"
+harness = false
+
+[[bench]]
+name = "aggregate"
 harness = false

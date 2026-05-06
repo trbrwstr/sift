@@ -1,6 +1,6 @@
 use criterion::{criterion_group, criterion_main, Criterion};
-use logforge_core::aggregate::Aggregator;
-use logforge_core::types::LogEntry;
+use sift_core::aggregate::Aggregator;
+use sift_core::types::LogEntry;
 
 fn bench_aggregate(c: &mut Criterion) {
     let entries: Vec<LogEntry> = (0..100_000)

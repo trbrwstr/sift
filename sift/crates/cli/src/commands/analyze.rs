@@ -1,28 +1,23 @@
-use logforge_core::engine::run_pipeline;
-use logforge_formats::{
-    json::JsonParser,
-    nginx::NginxParser,
-    plain::PlainParser,
-};
-use logforge_output::{stdout, table};
+use sift_core::engine::run_pipeline;
+use sift_formats::{make_parser, LogFormat};
+use sift_output::{json, stdout, table};
+use crate::OutputFormat;
 
 pub struct AnalyzeArgs {
     pub file: String,
-    pub format: String,
+    pub format: LogFormat,
     pub filter: Option<String>,
-    pub output: String,
+    pub output: OutputFormat,
+    pub top: usize,
 }
 
 pub fn run(args: AnalyzeArgs) -> Result<(), Box<dyn std::error::Error>> {
-    let agg = match args.format.as_str() {
-        "json" => run_pipeline(&args.file, JsonParser, args.filter)?,
-        "nginx" => run_pipeline(&args.file, NginxParser::new(), args.filter)?,
-        _ => run_pipeline(&args.file, PlainParser, args.filter)?,
-    };
+    let agg = run_pipeline(&args.file, make_parser(&args.format), args.filter)?;
 
-    match args.output.as_str() {
-        "table" => table::print_table(&agg),
-        _ => stdout::print_summary(&agg),
+    match args.output {
+        OutputFormat::Table  => table::print_table(&agg),
+        OutputFormat::Json   => json::print_json(&agg),
+        OutputFormat::Stdout => stdout::print_summary(&agg, args.top),
     }
 
     Ok(())

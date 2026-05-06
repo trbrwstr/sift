@@ -1,5 +1,5 @@
 use crate::{aggregate::Aggregator, filter};
-use crossbeam_channel::unbounded;
+use crossbeam_channel::bounded;
 use rayon::prelude::*;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
@@ -9,25 +9,39 @@ pub trait LogParser: Send + Sync {
     fn parse_line(&self, line: &str) -> Option<crate::types::LogEntry>;
 }
 
+impl<T: LogParser + ?Sized> LogParser for Box<T> {
+    fn parse_line(&self, line: &str) -> Option<crate::types::LogEntry> {
+        (**self).parse_line(line)
+    }
+}
+
 pub fn run_pipeline<P: LogParser + 'static>(
     file_path: &str,
     parser: P,
     query: Option<String>,
 ) -> Result<Aggregator, std::io::Error> {
-    let file = File::open(file_path)?;
+    let path = std::fs::canonicalize(file_path)?;
+    let file = File::open(path)?;
     let reader = BufReader::new(file);
 
-    let (tx, rx) = unbounded::<Vec<String>>();
+    let parallelism = std::thread::available_parallelism()
+        .map(|n| n.get())
+        .unwrap_or(1);
+    let (tx, rx) = bounded::<Vec<String>>(parallelism * 4);
 
-    // Producer thread (streaming read)
-    thread::spawn(move || {
+    let producer = thread::spawn(move || {
         let mut buffer = Vec::with_capacity(10_000);
 
-        for line in reader.lines().flatten() {
-            buffer.push(line);
+        for line in reader.lines() {
+            match line {
+                Ok(l) => buffer.push(l),
+                Err(_) => continue,
+            }
 
             if buffer.len() >= 10_000 {
-                tx.send(buffer).ok();
+                if tx.send(buffer).is_err() {
+                    return;
+                }
                 buffer = Vec::with_capacity(10_000);
             }
         }
@@ -37,7 +51,6 @@ pub fn run_pipeline<P: LogParser + 'static>(
         }
     });
 
-    // Consumers (parallel)
     let agg = rx
         .into_iter()
         .par_bridge()
@@ -58,6 +71,8 @@ pub fn run_pipeline<P: LogParser + 'static>(
             a.merge(b);
             a
         });
+
+    producer.join().ok();
 
     Ok(agg)
 }
