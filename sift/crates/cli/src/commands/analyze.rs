@@ -1,10 +1,6 @@
-use logforge_core::engine::run_pipeline;
-use logforge_formats::{
-    json::JsonParser,
-    nginx::NginxParser,
-    plain::PlainParser,
-};
-use logforge_output::{stdout, table};
+use sift_core::engine::run_pipeline;
+use sift_formats::make_parser;
+use sift_output::{json, stdout, table};
 
 pub struct AnalyzeArgs {
     pub file: String,
@@ -14,14 +10,11 @@ pub struct AnalyzeArgs {
 }
 
 pub fn run(args: AnalyzeArgs) -> Result<(), Box<dyn std::error::Error>> {
-    let agg = match args.format.as_str() {
-        "json" => run_pipeline(&args.file, JsonParser, args.filter)?,
-        "nginx" => run_pipeline(&args.file, NginxParser::new(), args.filter)?,
-        _ => run_pipeline(&args.file, PlainParser, args.filter)?,
-    };
+    let agg = run_pipeline(&args.file, make_parser(&args.format), args.filter)?;
 
     match args.output.as_str() {
         "table" => table::print_table(&agg),
+        "json" => json::print_json(&agg),
         _ => stdout::print_summary(&agg),
     }
 

@@ -4,7 +4,7 @@ use clap::{Parser, Subcommand};
 use commands::{analyze, stats};
 
 #[derive(Parser)]
-#[command(name = "logforge")]
+#[command(name = "sift")]
 struct Cli {
     #[command(subcommand)]
     command: Commands,
@@ -18,7 +18,7 @@ enum Commands {
         #[arg(short, long, default_value = "plain")]
         format: String,
 
-        #[arg(short, long)]
+        #[arg(long)]
         filter: Option<String>,
 
         #[arg(short, long, default_value = "stdout")]

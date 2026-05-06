@@ -1,4 +1,4 @@
-use logforge_core::types::LogEntry;
+use sift_core::types::LogEntry;
 
 /// Utility: build a LogEntry quickly
 pub fn make_entry(

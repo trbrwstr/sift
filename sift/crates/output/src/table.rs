@@ -1,4 +1,4 @@
-use logforge_core::aggregate::Aggregator;
+use sift_core::aggregate::Aggregator;
 
 pub fn print_table(agg: &Aggregator) {
     println!("\n+----------------------+--------+");

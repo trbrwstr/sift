@@ -1,6 +1,6 @@
 use criterion::{criterion_group, criterion_main, Criterion};
-use logforge_formats::plain::PlainParser;
-use logforge_core::engine::LogParser;
+use sift_formats::plain::PlainParser;
+use sift_core::engine::LogParser;
 
 fn bench_parse(c: &mut Criterion) {
     let parser = PlainParser;

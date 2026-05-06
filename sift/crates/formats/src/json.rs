@@ -1,4 +1,4 @@
-use logforge_core::{types::LogEntry, engine::LogParser};
+use sift_core::{types::LogEntry, engine::LogParser};
 use serde_json::Value;
 
 pub struct JsonParser;
@@ -13,5 +13,36 @@ impl LogParser for JsonParser {
             message: v.get("message")?.as_str()?.to_string(),
             fields: vec![],
         })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use sift_core::engine::LogParser;
+
+    #[test]
+    fn parses_valid_json_log() {
+        let line = r#"{"timestamp":"2024-01-01","level":"ERROR","message":"oops"}"#;
+        let entry = JsonParser.parse_line(line).expect("should parse");
+        assert_eq!(entry.message, "oops");
+        assert_eq!(entry.level.as_deref(), Some("ERROR"));
+        assert_eq!(entry.timestamp.as_deref(), Some("2024-01-01"));
+    }
+
+    #[test]
+    fn returns_none_for_missing_message() {
+        let line = r#"{"timestamp":"2024-01-01","level":"ERROR"}"#;
+        assert!(JsonParser.parse_line(line).is_none());
+    }
+
+    #[test]
+    fn returns_none_for_invalid_json() {
+        assert!(JsonParser.parse_line("not json").is_none());
+    }
+
+    #[test]
+    fn returns_none_for_empty_input() {
+        assert!(JsonParser.parse_line("").is_none());
     }
 }

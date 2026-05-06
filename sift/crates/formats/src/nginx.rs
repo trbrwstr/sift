@@ -1,23 +1,25 @@
-use logforge_core::{types::LogEntry, engine::LogParser};
+use sift_core::{types::LogEntry, engine::LogParser};
 use regex::Regex;
+use std::sync::LazyLock;
 
-pub struct NginxParser {
-    re: Regex,
-}
+static RE: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(
+        r#"(?P<ip>\S+) - - \[(?P<time>[^\]]+)\] "(?P<method>\S+) (?P<path>\S+) \S+" (?P<status>\d{3})"#,
+    )
+    .expect("nginx log regex is invalid")
+});
+
+pub struct NginxParser;
 
 impl NginxParser {
     pub fn new() -> Self {
-        let re = Regex::new(
-            r#"(?P<ip>\S+) - - \[(?P<time>[^\]]+)\] "(?P<method>\S+) (?P<path>\S+) \S+" (?P<status>\d{3})"#,
-        ).unwrap();
-
-        Self { re }
+        Self
     }
 }
 
 impl LogParser for NginxParser {
     fn parse_line(&self, line: &str) -> Option<LogEntry> {
-        let caps = self.re.captures(line)?;
+        let caps = RE.captures(line)?;
 
         Some(LogEntry {
             timestamp: Some(caps["time"].to_string()),

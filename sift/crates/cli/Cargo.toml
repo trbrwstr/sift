@@ -4,12 +4,12 @@ version = "0.1.0"
 edition = "2021"
 
 [[bin]]
-name = "logforge"
+name = "sift"
 path = "src/main.rs"
 
 [dependencies]
 clap = { version = "4", features = ["derive"] }
 
-logforge-core = { path = "../core" }
-logforge-formats = { path = "../formats" }
-logforge-output = { path = "../output" }
+sift-core = { path = "../core" }
+sift-formats = { path = "../formats" }
+sift-output = { path = "../output" }
