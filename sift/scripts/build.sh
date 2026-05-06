@@ -2,7 +2,7 @@
 
 set -e
 
-echo "Building LogForge..."
+echo "Building sift..."
 
 cargo build --release
 

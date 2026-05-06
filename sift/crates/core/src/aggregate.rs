@@ -34,7 +34,11 @@ impl Aggregator {
             *self.levels.entry(k).or_insert(0) += v;
         }
         for (k, v) in other.messages {
-            *self.messages.entry(k).or_insert(0) += v;
+            if let Some(c) = self.messages.get_mut(k.as_str()) {
+                *c += v;
+            } else if self.messages.len() < MAX_UNIQUE_MESSAGES {
+                self.messages.insert(k, v);
+            }
         }
     }
 
@@ -121,5 +125,20 @@ mod tests {
     fn top_messages_empty() {
         let agg = Aggregator::default();
         assert!(agg.top_messages(5).is_empty());
+    }
+
+    #[test]
+    fn merge_respects_message_cap() {
+        let mut a = Aggregator::default();
+        for i in 0..MAX_UNIQUE_MESSAGES {
+            a.process(&entry(&format!("msg-{}", i), None));
+        }
+        assert_eq!(a.messages.len(), MAX_UNIQUE_MESSAGES);
+
+        let mut b = Aggregator::default();
+        b.process(&entry("brand-new-message", None));
+
+        a.merge(b);
+        assert_eq!(a.messages.len(), MAX_UNIQUE_MESSAGES);
     }
 }

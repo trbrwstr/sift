@@ -2,15 +2,15 @@
 
 set -e
 
-REPO="yourname/logforge"
+REPO="yourname/sift"
 VERSION=${VERSION:-latest}
 
-echo "Installing LogForge..."
+echo "Installing sift..."
 
 if [[ "$VERSION" == "latest" ]]; then
-  URL="https://github.com/$REPO/releases/latest/download/logforge"
+  URL="https://github.com/$REPO/releases/latest/download/sift"
 else
-  URL="https://github.com/$REPO/releases/download/$VERSION/logforge"
+  URL="https://github.com/$REPO/releases/download/$VERSION/sift"
 fi
 
 OS="$(uname -s)"
@@ -28,7 +28,7 @@ case "$OS" in
     ;;
 esac
 
-curl -L "$URL" -o /usr/local/bin/logforge
-chmod +x /usr/local/bin/logforge
+curl -L "$URL" -o /usr/local/bin/sift
+chmod +x /usr/local/bin/sift
 
-echo "LogForge installed successfully."
+echo "sift installed successfully."

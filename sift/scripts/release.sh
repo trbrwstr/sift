@@ -8,6 +8,6 @@ cargo build --release
 
 echo "Copying binary..."
 
-cp target/release/logforge /usr/local/bin/logforge
+cp target/release/sift /usr/local/bin/sift
 
-echo "Installed: logforge"
+echo "Installed: sift"

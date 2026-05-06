@@ -25,8 +25,7 @@ enum Commands {
     Analyze {
         file: String,
 
-        #[arg(short, long, value_enum, default_value_t = LogFormat::Plain,
-              help = "Log format: plain, json, nginx")]
+        #[arg(short, long, value_enum, default_value_t = LogFormat::Plain)]
         format: LogFormat,
 
         #[arg(long, help = "Filter expression, e.g. 'status>=500 AND level=ERROR'")]
